@@ -3,8 +3,9 @@ const os = require('os');
 const exec = util.promisify(require('child_process').exec);
 
 async function isRunning(processName) {
+    const process = processName.substring(0,15);
     try {
-        const {stdout} = await exec(`pgrep -x ${processName}`);
+        const {stdout} = await exec(`pgrep -x ${process}`);
         return Boolean(stdout);
     } catch (err) {
         return false;

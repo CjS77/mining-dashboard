@@ -1,4 +1,4 @@
-const debug = require("debug")("wallet-events");
+const debug = require("debug")("events");
 
 function txReceivedEvent(
     eventType = "received",
@@ -107,7 +107,7 @@ class WalletEvents {
         this.events = [];
         this.coinbaseTxs = new Set();
         this.blocksFound = 0;
-        this.balance = 0;
+        this.confirmed = 0;
         this.pending = 0;
     }
 
@@ -122,14 +122,16 @@ class WalletEvents {
             }
             this.coinbaseTxs.add(txid);
             this.events.push(normalized);
-            if (normalized.status === "Mined Unconfirmed") {
+            if (normalized.status === "Coinbase Unconfirmed") {
                 // Mined, but could still be re-orged out
                 this.pending += normalized.amount;
+                this.blocksFound += 1;
             }
-            if (normalized.status === "Mined Confirmed") {
+            if (normalized.status === "Coinbase Confirmed") {
                 // Not bulletproof, but good enough for now
-                this.balance += normalized.amount;
+                this.confirmed += normalized.amount;
                 this.pending -= normalized.amount;
+                debug(`Confirmed block. New amounts. Pending: ${this.pending}. Confirmed: ${this.confirmed}`);
             }
         }
     }
@@ -142,7 +144,7 @@ class WalletEvents {
     
     getStats() {
         return {
-            balance: this.balance,
+            confirmed: this.confirmed,
             pending: this.pending,
             blocksFound: this.blocksFound
         }
@@ -175,6 +177,7 @@ function normalizeEvent(event) {
     const ts = new Date();
     switch (event.eventType) {
         case "confirmation":
+        case "mined":
             return {
                 timestamp: ts,
                 eventType: event.eventType,

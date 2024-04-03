@@ -26,7 +26,7 @@ class DummyStats {
             system: {
                 cpu: 0
             },
-            currentEvent: null,
+            new_events: [],
         }
         this.handle = null;
         this.lastEvent = new Date();
@@ -50,10 +50,10 @@ class DummyStats {
         this.stats.sha3x.hr = this.stats.sha3x.mining ? Math.trunc(300_000 + 100_000 * ts % 100_000) : 0;
         this.stats.system.cpu = 80 + Math.trunc(20 * Math.sin(ts % 10));
         if (roll) {
-            this.stats.currentEvent = "block"
+            this.stats.new_events = ["block"]
             this.lastEvent = new Date();
         } else if (new Date() - this.lastEvent > 6_000) {
-            this.stats.currentEvent = null;
+            this.stats.new_events = [];
         }
     }
     

@@ -55,7 +55,7 @@ function extract_stats(line) {
         console.log(stats);
         return stats;
     }
-    throw new Error("Not a hashrate line");
+    debug("Not a hashrate line: ", line);
 }
 
 function sha3StatsWatcher(filename) {

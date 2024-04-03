@@ -1,16 +1,16 @@
 export default function defaultState() {
     return {
         tor: {
-            online: true,
+            online: false,
         },
         node: {
-            online: true,
-            height: 3145,
+            online: false,
+            height: 0,
         },
         wallet: {
             online: false,
-            incomingPending: 10534,
-            confirmed: 25776,
+            incomingPending: 0,
+            confirmed: 0,
         },
         randomx: {
             mining: false,
@@ -20,13 +20,11 @@ export default function defaultState() {
             hr: 0,
         },
         sha3x: {
-            mining: true,
-            hr: 323000000,
+            mining: false,
+            hr: 0,
         },
         system: {
-            cpu: 95
-        },
-        currentEvent: null,
-        
+            cpu: 5
+        }
     }
 }
