@@ -27,7 +27,7 @@ Then run each of these in a separate terminal. Take note of the extra command li
 
 Once everything is running, it should look something like this:
 
-<video width="640" src="https://github.com/CjS77/mining-dashboard/raw/main/assets/mining_terminals.mov"></video>
+<video width="640" src="https://drive.google.com/drive/u/2/folders/1ujDW-Gd-XMcVUFuV7X_v9_CEwOkTNOu9"></video>
 
 ## Run the dashboard.
 
@@ -53,5 +53,5 @@ Start the frontend by running:
 
 The frontend should now be running on `http://localhost:3001`.
 
-<video width="640" src="https://github.com/CjS77/mining-dashboard/raw/main/assets/block_found.mov"></video>
+<video width="640" src="https://drive.google.com/drive/u/2/folders/1ujDW-Gd-XMcVUFuV7X_v9_CEwOkTNOu9"></video>
 
