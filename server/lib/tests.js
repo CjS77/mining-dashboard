@@ -1,4 +1,5 @@
 const {withTimout, isRunning} = require('./helpers');
+const {sha3StatsWatcher} = require('./sha3stats');
 
 async function getTask(msg, timeout) {
     let p = new Promise((resolve, reject) => {
@@ -17,4 +18,13 @@ async function testSuite() {
     return results;
 }
 
-module.exports = { testSuite };
+function testLogWatcher() {
+    const sha3 = require('./sha3stats');
+    let watcher = sha3StatsWatcher("/home/cayle/.tari/nextnet/log/miner/miner.log");
+    setTimeout(() => {
+        watcher.stop();
+        console.log("Done");
+    }, 15_000);
+}
+
+module.exports = { testSuite, testLogWatcher };

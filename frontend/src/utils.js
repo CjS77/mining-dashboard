@@ -1,5 +1,6 @@
 const SERVER_URL = 'http://localhost:3000';
-const STATS_ENDPOINT = '/miner-stats-dummy';
+const STATS_ENDPOINT = '/miner-stats';
+
 function formatHR(value) {
     if (value < 1000) {
         return `${value} H/s`;
@@ -10,6 +11,20 @@ function formatHR(value) {
     } else {
         return `${(value / 1000000000).toFixed(2)} GH/s`;
     }
+}
+
+function formatUptime(seconds) {
+    const days = Math.floor(seconds / 86400);
+    const ds = days > 0 ? `${days}d ` : '';
+    seconds -= days * 86400;
+    const hours = Math.floor(seconds / 3600);
+    const hs = Boolean(ds) ||  hours > 0 ? `${hours}h ` : '';
+    seconds -= hours * 3600;
+    const minutes = Math.floor(seconds / 60);
+    const ms = Boolean(ds) || Boolean(hs) || minutes > 0 ? `${minutes}m ` : '';
+    seconds -= minutes * 60;
+    return `${ds}${hs}${ms}${seconds}s`;
+    
 }
 
 function videoForEvent(event) {
@@ -27,4 +42,10 @@ function videoForEvent(event) {
     return `${process.env.PUBLIC_URL}/assets/videos/${video}`;
 }
 
-export { formatHR, videoForEvent, SERVER_URL, STATS_ENDPOINT };
+export {
+    formatHR,
+    formatUptime,
+    videoForEvent,
+    SERVER_URL,
+    STATS_ENDPOINT
+};

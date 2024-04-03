@@ -14,7 +14,10 @@ export default function defaultState() {
         },
         randomx: {
             mining: false,
-            hr: 14500,
+            uptime: 0,
+            user_agent: null,
+            cpu_brand: null,
+            hr: 0,
         },
         sha3x: {
             mining: true,

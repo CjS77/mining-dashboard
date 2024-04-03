@@ -1,9 +1,12 @@
-const {withTimout, isRunning, getCpuUsage} = require('./helpers');
+const {withTimout, isRunning, getCpuUsage, defaultLogDirectory} = require('./helpers');
 const xmrig = require('./xmrig');
 const debug = require('debug')('dummy-stats');
+const sha3stats = require('./sha3stats');
 
 class MinerStats {
-    constructor() {
+    constructor(options = {}) {
+        const sha3Logfile = options.sha3Logfile || `${defaultLogDirectory()}miner/miner.log`;
+        this.sha3StatsWatcher = sha3stats.sha3StatsWatcher(sha3Logfile);
         this.stats = {
             timestamp: null,
             tor: {
@@ -51,24 +54,39 @@ class MinerStats {
         const xmrig_url = xmrig.getXmrigUrl();
         const xmrigStatsP = withTimout("Xmrig", xmrig.fetchXmrigStats(xmrig_url), timeout, xmrig.defaultStats());
         const cpuP = withTimout("CPU", getCpuUsage(1000), timeout, 0);
+        const sha3minerP = withTimout("Sha3x", isRunning("minotari_miner"), timeout, false);
         try {
-            const results = await Promise.all([torP, nodeP, walletOnlineP, xmrigStatsP, cpuP]);
-            const [torOnline, nodeOnline, walletOnline, xmrigs, cpu] = results;
+            const results = await Promise.all([torP, nodeP, walletOnlineP, xmrigStatsP, cpuP, sha3minerP]);
+            const [
+                torOnline,
+                nodeOnline,
+                walletOnline,
+                xmrigs,
+                cpu,
+                isSha3Mining
+            ] = results;
             this.stats.timestamp = new Date();
             this.stats.tor.online = torOnline;
             this.stats.node.online = nodeOnline;
             this.stats.wallet.online = walletOnline;
             this.stats.randomx = xmrigs;
             this.stats.system.cpu = cpu;
+            if (isSha3Mining) {
+                const sha3 = this.sha3StatsWatcher.value();
+                this.stats.node.height = sha3.height;
+                this.stats.sha3x = sha3;
+                this.stats.sha3x.mining = true;
+            } else {
+                this.stats.sha3x.mining = false;
+                this.stats.sha3x.threads = 0;
+                this.stats.sha3x.hr = 0;
+            }
         } catch (e) {
             debug("Error collecting miner stats", e);
             return
         }
-        this.stats.node.height = 0;
         this.stats.wallet.incomingPending = 0;
         this.stats.wallet.confirmed += 0;
-        this.stats.sha3x.mining = false;
-        this.stats.sha3x.hr = 0;
         debug("Update miner stats complete")
     }
     

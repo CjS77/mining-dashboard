@@ -68,6 +68,11 @@ async function getCpuUsage(period = 1000) {
     });
 }
 
+function defaultLogDirectory() {
+    const network = process.env.TARI_NETWORK || "nextnet";
+    return `${os.homedir()}/.tari/${network}/log/`;
+}
+
 module.exports = {
-    isRunning, withTimout, getCpuUsage
+    isRunning, withTimout, getCpuUsage, defaultLogDirectory
 };

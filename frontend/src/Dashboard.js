@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useContext } from 'react';
 import { Card, CardContent, Grid, Paper, Typography, Zoom } from '@mui/material';
 import { AppContext } from './App';
-import { formatHR, videoForEvent } from './utils';
+import { formatHR, formatUptime, videoForEvent } from './utils';
 import { Gauge } from '@mui/x-charts/Gauge';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
@@ -20,17 +20,20 @@ const BlockHeightCard = ({height}) => (
 
 );
 
-const RandomXCard = ({hr}) => (
+const RandomXCard = ({xmrig}) => (
     <CardContent>
         <Typography variant="h5">RandomX</Typography>
-        <Typography variant="h3">{formatHR(hr)}</Typography>
+        <Typography variant="h7">{xmrig.user_agent || ""}</Typography>
+        <Typography variant="h3">{formatHR(xmrig.hr || 0)}</Typography>
+        <Typography variant="h6">Uptime: {formatUptime(xmrig.uptime || 0)}</Typography>
     </CardContent>
 );
 
-const Sha3xCard = ({hr}) => (
+const Sha3xCard = ({sha3x}) => (
     <CardContent>
         <Typography variant="h5">Sha3x</Typography>
-        <Typography variant="h3">{formatHR(hr)}</Typography>
+        <Typography variant="h3">{formatHR(sha3x.hr)}</Typography>
+        <Typography variant="h6">Threads: {sha3x.threads}</Typography>
     </CardContent>
 );
 
@@ -113,10 +116,10 @@ const Dashboard = () => {
                 {RoundedCard(<BlockHeightCard height={state.node.height}/>, '#b0b0ff')}
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-                {RoundedCard(<RandomXCard hr={state.randomx.hr}/>, state.randomx.mining ? 'green' : 'gray')}
+                {RoundedCard(<RandomXCard xmrig={state.randomx}/>, state.randomx.mining ? 'green' : 'gray')}
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-                {RoundedCard(<Sha3xCard hr={state.sha3x.hr}/>, state.sha3x.mining ? 'green' : 'gray')}
+                {RoundedCard(<Sha3xCard sha3x={state.sha3x}/>, state.sha3x.mining ? 'green' : 'gray')}
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
                 {RoundedCard(<CpuCard value={state.system.cpu}/>, '#b0b0ff')}
