@@ -1,0 +1,154 @@
+
+########################################################################################################################
+#                                                                                                                      #
+#                      Common Configuration Options (CommonConfig, AutoUpdateConfig, MetricsConfig)                    #
+#                                                                                                                      #
+########################################################################################################################
+
+[common]
+#override_from="stagenet"
+#base_path="<HOME>/.tari"
+
+[stagenet.auto_update]
+# Customize the hosts that are used to check for updates. These hosts must contain update information in DNS TXT records.
+update_uris = ["updates.stagenet.taripulse.com"]
+
+[auto_update]
+check_interval = 300
+
+[metrics]
+[peer_seeds]
+[nextnet.p2p.seeds]
+# DNS seeds hosts - DNS TXT records are queried from these hosts and the resulting peers added to the comms peer list.
+dns_seeds = ["seeds.nextnet.tari.com"]
+# Custom specified peer seed nodes
+peer_seeds = [
+]
+
+[stagenet.p2p.seeds]
+# DNS seeds hosts - DNS TXT records are queried from these hosts and the resulting peers added to the comms peer list.
+dns_seeds = ["seeds.stagenet.tari.com"]
+# Custom specified peer seed nodes
+peer_seeds = [
+]
+
+########################################################################################################################
+#                                                                                                                      #
+#                      Base Node Configuration Options (BaseNodeConfig)                                                #
+#                                                                                                                      #
+########################################################################################################################
+
+[stagenet.base_node]
+# A path to the file that stores your node identity and secret key (default = "config/base_node_id.json")
+identity_file = "config/base_node_id_stagenet.json"
+
+[nextnet.base_node]
+# A path to the file that stores your node identity and secret key (default = "config/base_node_id.json")
+identity_file = "config/base_node_id_nextnet.json"
+
+[base_node]
+# Set to false to disable the base node GRPC server (default = true)
+grpc_enabled = true
+
+# The socket to expose for the gRPC base node server (default = "/ip4/127.0.0.1/tcp/18142")
+grpc_address = "/ip4/127.0.0.1/tcp/18142"
+
+grpc_server_deny_methods = []
+
+[base_node.storage]
+track_reorgs = true
+
+[base_node.p2p]
+# REPLACE: Insert your ip address here, e.g. "/ip4/192.168.1.5/tcp/9998"
+auxiliary_tcp_listener_address = "/ip4/[my.ip.add]/tcp/9998"
+listener_liveness_check_interval = 15
+
+[base_node.p2p.transport]
+tor.control_address = "/ip4/127.0.0.1/tcp/9051"
+# REPLACE: Use your control password here
+tor.control_auth = "password=tari" # or "password=xxxxxx"
+# REPLACE: Insert your ip address here
+tor.proxy_bypass_addresses = ["/dns4/[my.ip.add.res]/tcp/9997"]
+
+[base_node.p2p.dht]
+# The `DbConnectionUrl` for the Dht database. Default: In-memory database
+database_url = "data/base_node/dht.db"
+
+########################################################################################################################
+#                                                                                                                      #
+#                                                 Wallet                                                               #
+#                                                                                                                      #
+########################################################################################################################
+[wallet]
+# REPLACE: the path to the notifier script
+notify_file = "/path/to/notifier.sh"
+
+[wallet.transactions]
+# This is the timeout period that will be used for base node broadcast monitoring tasks (default = 30)
+broadcast_monitoring_timeout = 180
+# This is the timeout period that will be used for chain monitoring tasks (default = 60)
+chain_monitoring_timeout = 60
+# This is the timeout period that will be used for sending transactions directly (default = 20)
+direct_send_timeout = 180
+# This is the timeout period that will be used for sending transactions via broadcast mode (default = 60)
+broadcast_send_timeout = 180
+transaction_event_channel_size = 25000
+
+[wallet.outputs]
+prevent_fee_gt_amount = false
+event_channel_size = 3500
+
+[wallet.p2p]
+# REPLACE: Insert your ip address here,
+auxiliary_tcp_listener_address = "/ip4/[my.ip.add.res]/tcp/9997"
+
+[wallet.p2p.transport]
+# REPLACE: This usually works as is, but may have to use your actual LAN ip address
+tor.control_address = "/ip4/127.0.0.1/tcp/9051"
+# REPLACE: Use your control password here
+tor.control_auth = "password=tari" # or "password=xxxxxx"
+# REPLACE: Insert your ip address here
+tor.proxy_bypass_addresses = ["/dns4/[my.ip.add.res]/tcp/9998"]
+
+[wallet.p2p.dht]
+# The `DbConnectionUrl` for the Dht database. Default: In-memory database
+database_url = "data/wallet/dht.db"
+
+########################################################################################################################
+#                                                                                                                      #
+#                      Miner Configuration Options (MinerConfig)                                                       #
+#                                                                                                                      #
+########################################################################################################################
+
+[miner]
+
+# REPLACE: This usually works as is, but may have to use your actual LAN ip address
+base_node_grpc_address = "/ip4/127.0.0.1/tcp/18142"
+# REPLACE: Adjust the number of threads to your preference
+num_mining_threads = 2
+# REPLACE: Paste your console wallet address here
+wallet_payment_address = "da128683598f49efddc6327bfdb3dcd8bdccce1337ca0c69d8a97bd37325bc2feb"
+
+
+########################################################################################################################
+#                                                                                                                      #
+#                      Merge Mining Configuration Options (MergeMiningProxyConfig)                                     #
+#                                                                                                                      #
+########################################################################################################################
+
+[merge_mining_proxy]
+monerod_url = [ # mainnet
+    # more reliable
+    "http://xmr.support:18081",
+    "http://node1.xmr-tw.org:18081",
+    "http://xmr.nthrow.nyc:18081",
+    # not so reliable
+    "http://node.xmrig.com:18081",
+    "http://monero.exan.tech:18081",
+    "http://18.132.124.81:18081",
+]
+
+# REPLACE: This usually works as is, but may have to use your actual LAN ip address
+base_node_grpc_address = "/ip4/127.0.0.1/tcp/18142"
+# REPLACE: Paste your console wallet address here
+wallet_payment_address = "da128683598f49efddc6327bfdb3dcd8bdccce1337ca0c69d8a97bd37325bc2feb"
